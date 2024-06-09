@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpSpeed; 
     private Rigidbody2D rb;
     private float xMovementInput;
 
@@ -18,6 +20,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         xMovementInput = Input.GetAxis("Horizontal");
+        Jump(); 
     }
 
     void FixedUpdate()
@@ -28,5 +31,13 @@ public class Player : MonoBehaviour
     private void Move()
     {
         rb.velocity = new Vector2(moveSpeed * xMovementInput, rb.velocity.y);
+    }
+
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+        }
     }
 }
