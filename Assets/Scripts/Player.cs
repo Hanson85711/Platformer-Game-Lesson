@@ -6,7 +6,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpSpeed; 
+    [SerializeField] private float jumpSpeed;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundCheckDistance;
+    [SerializeField] private bool isGrounded;
     private Rigidbody2D rb;
     private float xMovementInput;
 
@@ -19,15 +22,23 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CollisionCheck();
         xMovementInput = Input.GetAxis("Horizontal");
-        Jump(); 
+        Jump();
     }
+
 
     void FixedUpdate()
     {
         Move();
     }
 
+
+    private void CollisionCheck()
+    {
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+    }
+    
     private void Move()
     {
         rb.velocity = new Vector2(moveSpeed * xMovementInput, rb.velocity.y);
@@ -35,9 +46,15 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Space)) && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - groundCheckDistance));
     }
 }
