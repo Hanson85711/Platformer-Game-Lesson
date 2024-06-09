@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Movement Forces")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpSpeed;
+
+    [Header("Collision Info")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private bool isGrounded;
+
+    private Animator animator; 
     private bool canDoubleJump;
     private Rigidbody2D rb;
     private float xMovementInput;
@@ -18,11 +23,16 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool isMoving = rb.velocity.x != 0; 
+
+        animator.SetBool("isMoving", isMoving);
+
         JumpButton();
         CollisionCheck();
         xMovementInput = Input.GetAxis("Horizontal");
