@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Jump();
+        JumpButton();
         CollisionCheck();
         xMovementInput = Input.GetAxis("Horizontal");
         
@@ -31,7 +31,6 @@ public class Player : MonoBehaviour
         {
             canDoubleJump = true;
         }
-
     }
 
 
@@ -51,17 +50,22 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(moveSpeed * xMovementInput, rb.velocity.y);
     }
 
-    private void Jump()
+    private void JumpButton()
     {
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Space)) && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            Jump();
         }
         else if (canDoubleJump && Input.GetKeyDown(KeyCode.Space))
         {
             canDoubleJump = false;
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            Jump();
         }
+    }
+
+    private void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
     }
 
     void OnDrawGizmos()
